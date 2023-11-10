@@ -20,12 +20,11 @@ def read_temp_publish():
   #oled = SSD1306_I2C(WIDTH,HEIGHT,i2c)
 
   firmware_url = "https://raw.githubusercontent.com/<username>/<repo_name>/<branch_name>"
+  firmware_url = "https://raw.githubusercontent.com/euridium/pi_pico_w_auto/main"
 
 
-
-
-
-
+  ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "read_temp_publish_oled_v2.py")
+  ota_updater.download_and_install_update_if_available()
 
 
   mqtt_host = "192.168.0.202"
