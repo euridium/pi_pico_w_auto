@@ -1,0 +1,3 @@
+GITHUB_USER = "euridium"
+GITHUB_TOKEN = "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"
+
