@@ -274,6 +274,7 @@ def entry():
     files = ["app.py", "main.py"]
   )  
 
+  WDT = machine.WDT(timeout=8300)
   # connect to wifi
   connect_to_wifi(wlan)
 
@@ -292,7 +293,6 @@ def entry():
     print("Updated to the latest version! Rebooting...")
     machine.reset()
 
-  WDT = machine.WDT(timeout=8300)
   read_temp_publish()
   
 
