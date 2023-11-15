@@ -7,6 +7,7 @@ import machine
 import network
 import time
 import onewire, ds18x20
+import gc
 
 from umqtt.simple import MQTTClient
 from ssd1306 import SSD1306_I2C
@@ -15,16 +16,16 @@ from WIFI_CONFIG import SSID, PASSWORD
 
 import senko
 
-OTA = senko.Senko(
-  user="ocktokit", # Required
-  repo="octokit-iot", # Required
-  branch="master", # Optional: Defaults to "master"
-  working_dir="app", # Optional: Defaults to "app"
-  files = ["boot.py", "main.py"]
-)
- 
 global use_oled
 use_oled = False
+
+gc.enable()
+
+# setup to WiFi
+global wlan
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(SSID, PASSWORD)
 
 #### functions ###
 
@@ -63,13 +64,15 @@ def connect_to_wifi(wlan):
   while wlan.isconnected() == False:
     message="Wating for Wifi ..."
     print("{0}".format(message))
-    oled.fill(0)
-    time.sleep(0.2)
-    oled.show()
-    oled.fill(0)
-    oled.text("{0}".format(message), 0, 10)
-    oled.text("fail count : {0}".format(count), 0, 20)
-    oled.show()
+    if use_oled:
+      oled.fill(0)
+      time.sleep(0.2)
+      oled.show()
+      oled.fill(0)
+      oled.text("{0}".format(message), 0, 10)
+      oled.text("fail count : {0}".format(count), 0, 20)
+      oled.show()
+    print("fail count : {0}".format(count))
     count += 1
     if count > 30:
       machine.reset()
@@ -84,6 +87,7 @@ def connect_to_wifi(wlan):
 
 def read_temp_publish():
   global use_oled
+  global WDT
   mqtt_host = "192.168.0.202"
   mqtt_username = ""  # Your Adafruit IO username
   mqtt_password = ""  # Adafruit IO Key
@@ -111,13 +115,6 @@ def read_temp_publish():
     oled.show()
   time.sleep(0.5)
   ds_pin = machine.Pin(22, machine.Pin.PULL_UP)
-
-  # setup to WiFi
-  wlan = network.WLAN(network.STA_IF)
-  wlan.active(True)
-  wlan.connect(SSID, PASSWORD)
-
-
 
 
 #  OTA_UPDATE_GITHUB_REPOS = {
@@ -154,6 +151,7 @@ def read_temp_publish():
 
   fail_counter = 0
   while True:
+    # WDT.feed()
     try:
       TESTING_NO_SENSOR = False
       # confirm and reconnect wireless
@@ -250,15 +248,28 @@ def read_temp_publish():
       time.sleep(5)
 
 
+
 def entry():
+  
+  global wlan
+  global WDT
+  WDT = machine.WDT(timeout=8300)
+
 
   OTA = senko.Senko(
     user="euridium", # Required
     repo="pi_pico_w_auto", # Required
-    branch="master", # Optional: Defaults to "master"
-    working_dir="app", # Optional: Defaults to "app"
+    branch="main", # Optional: Defaults to "master"
+    working_dir="read_temp_mqtt_publish", # Optional: Defaults to "app"
     files = ["app.py", "main.py"]
-)
+  )  
+
+  # connect to wifi
+  connect_to_wifi(wlan)
+
+  if OTA.update():
+    print("Updated to the latest version! Rebooting...")
+    machine.reset()
 
   read_temp_publish()
   
