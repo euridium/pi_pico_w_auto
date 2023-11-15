@@ -63,7 +63,7 @@ def connect_to_wifi(wlan):
     
   count = 0
   while wlan.isconnected() == False:
-    # WDT.feed()
+    WDT.feed()
     message="Wating for Wifi ..."
     print("{0}".format(message))
     if use_oled:
@@ -153,7 +153,7 @@ def read_temp_publish():
 
   fail_counter = 0
   while True:
-    # WDT.feed()
+    WDT.feed()
     try:
       TESTING_NO_SENSOR = False
       # confirm and reconnect wireless
@@ -273,6 +273,7 @@ def entry():
     print("Updated to the latest version! Rebooting...")
     machine.reset()
 
+  WDT = machine.WDT(timeout=8300)
   read_temp_publish()
   
 
