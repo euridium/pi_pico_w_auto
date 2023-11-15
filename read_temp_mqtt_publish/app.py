@@ -103,18 +103,6 @@ def read_temp_publish():
     oled = SSD1306_I2C(WIDTH,HEIGHT,i2c)
 
 
-  if use_oled:
-    # test screen
-    oled.fill(0)
-    oled.text("123456789ABCDEFG", 0, 0)
-    oled.text("23456789ABCDEFGH", 0, 10)
-    oled.text("3456789ABCDEFGHI", 0, 20)
-    oled.text("456789ABCDEFGHIJ", 0, 30)
-    oled.text("56789ABCDEFGHIJK", 0, 40)
-    oled.text("6789ABCDEFGHIJKL", 0, 50)
-  print("Show screen")
-  if use_oled:
-    oled.show()
   time.sleep(0.5)
   ds_pin = machine.Pin(22, machine.Pin.PULL_UP)
 
@@ -264,6 +252,17 @@ def entry():
 
   if use_oled:
     oled = SSD1306_I2C(WIDTH,HEIGHT,i2c)
+  if use_oled:
+    # test screen
+    oled.fill(0)
+    oled.text("123456789ABCDEFG", 0, 0)
+    oled.text("23456789ABCDEFGH", 0, 10)
+    oled.text("3456789ABCDEFGHI", 0, 20)
+    oled.text("456789ABCDEFGHIJ", 0, 30)
+    oled.text("56789ABCDEFGHIJK", 0, 40)
+    oled.text("6789ABCDEFGHIJKL", 0, 50)
+    oled.show()
+  print("Show screen")
 
 
   OTA = senko.Senko(
