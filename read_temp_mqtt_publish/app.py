@@ -253,9 +253,17 @@ def read_temp_publish():
 
 def entry():
   
+  global use_oled
   global wlan
   global WDT
-  # WDT = machine.WDT(timeout=8300)
+  WIDTH =128 
+  HEIGHT= 64
+  i2c=machine.I2C(0,scl=machine.Pin(9),sda=machine.Pin(8),freq=200000)
+  if i2c.scan():
+    use_oled = True
+
+  if use_oled:
+    oled = SSD1306_I2C(WIDTH,HEIGHT,i2c)
 
 
   OTA = senko.Senko(
@@ -269,7 +277,18 @@ def entry():
   # connect to wifi
   connect_to_wifi(wlan)
 
+  message="checking updates"
+  print("{0}".format(message))
+  if use_oled:
+    oled.fill(0)
+    oled.text("{0}".format(message), 0, 10)
+    oled.show()
   if OTA.update():
+    if use_oled:
+      message="updated. reboot"
+      oled.fill(0)
+      oled.text("{0}".format(message), 0, 10)
+      oled.show()
     print("Updated to the latest version! Rebooting...")
     machine.reset()
 
