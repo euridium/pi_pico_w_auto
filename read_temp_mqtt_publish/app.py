@@ -43,6 +43,7 @@ def __init__():
 
 def connect_to_wifi(wlan):
   global use_oled
+  global WDT
   WIDTH =128 
   HEIGHT= 64
   i2c=machine.I2C(0,scl=machine.Pin(9),sda=machine.Pin(8),freq=200000)
@@ -62,6 +63,7 @@ def connect_to_wifi(wlan):
     
   count = 0
   while wlan.isconnected() == False:
+    # WDT.feed()
     message="Wating for Wifi ..."
     print("{0}".format(message))
     if use_oled:
@@ -253,7 +255,7 @@ def entry():
   
   global wlan
   global WDT
-  WDT = machine.WDT(timeout=8300)
+  # WDT = machine.WDT(timeout=8300)
 
 
   OTA = senko.Senko(
