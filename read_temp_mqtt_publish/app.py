@@ -21,6 +21,9 @@ use_oled = False
 
 gc.enable()
 
+global WDT
+WDT = False
+
 # setup to WiFi
 global wlan
 wlan = network.WLAN(network.STA_IF)
@@ -63,7 +66,8 @@ def connect_to_wifi(wlan):
     
   count = 0
   while wlan.isconnected() == False:
-    WDT.feed()
+    if WDT:
+      WDT.feed()
     message="Wating for Wifi ..."
     print("{0}".format(message))
     if use_oled:
@@ -273,7 +277,6 @@ def entry():
     files = ["app.py", "main.py"]
   )  
 
-  WDT = machine.WDT(timeout=8300)
   # connect to wifi
   connect_to_wifi(wlan)
 
@@ -292,6 +295,7 @@ def entry():
     print("Updated to the latest version! Rebooting...")
     machine.reset()
 
+  WDT = machine.WDT(timeout=8300)
   read_temp_publish()
   
 
