@@ -286,7 +286,7 @@ def entry():
     if use_oled:
       oled.fill(0)
       oled.text("{0}".format(message), 0, 10)
-      oled.show()i
+      oled.show()
     if OTA.update():
       if use_oled:
         message="updated. reboot"
@@ -301,12 +301,15 @@ def entry():
 #    print("True")
 #  else:
 #    print("False")
+
   WDT = machine.WDT(timeout=8300)
+
 #  print("WDT : {0}".format(WDT))
 #  if WDT:
 #    print("True")
 #  else:
 #    print("False")
+
   read_temp_publish()
   
 
