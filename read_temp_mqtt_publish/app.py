@@ -145,7 +145,8 @@ def read_temp_publish():
 
   fail_counter = 0
   while True:
-    WDT.feed()
+    if WDT:
+      WDT.feed()
     try:
       TESTING_NO_SENSOR = False
       # confirm and reconnect wireless
@@ -279,23 +280,33 @@ def entry():
 
   # connect to wifi
   connect_to_wifi(wlan)
-
-  message="checking updates"
-  print("{0}".format(message))
-  if use_oled:
-    oled.fill(0)
-    oled.text("{0}".format(message), 0, 10)
-    oled.show()
-  if OTA.update():
+  if True:
+    message="checking updates"
+    print("{0}".format(message))
     if use_oled:
-      message="updated. reboot"
       oled.fill(0)
       oled.text("{0}".format(message), 0, 10)
-      oled.show()
-    print("Updated to the latest version! Rebooting...")
-    machine.reset()
+      oled.show()i
+    if OTA.update():
+      if use_oled:
+        message="updated. reboot"
+        oled.fill(0)
+        oled.text("{0}".format(message), 0, 10)
+        oled.show()
+      print("Updated to the latest version! Rebooting...")
+      machine.reset()
 
+#  print("WDT : {0}".format(WDT))
+#  if WDT:
+#    print("True")
+#  else:
+#    print("False")
   WDT = machine.WDT(timeout=8300)
+#  print("WDT : {0}".format(WDT))
+#  if WDT:
+#    print("True")
+#  else:
+#    print("False")
   read_temp_publish()
   
 
