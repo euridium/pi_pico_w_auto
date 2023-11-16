@@ -254,6 +254,11 @@ def entry():
   i2c=machine.I2C(0,scl=machine.Pin(9),sda=machine.Pin(8),freq=200000)
   if i2c.scan():
     use_oled = True
+    print("Found OLED on : {0}".format(i2c.scan()))
+  else:
+    print("No OLED found")
+
+  
 
   if use_oled:
     oled = SSD1306_I2C(WIDTH,HEIGHT,i2c)
