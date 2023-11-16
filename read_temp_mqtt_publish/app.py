@@ -273,6 +273,7 @@ def entry():
     oled.text("6789ABCDEFGHIJKL", 0, 50)
     oled.show()
   print("Show screen")
+  time.sleep(1)
 
 
   OTA = senko.Senko(
@@ -285,13 +286,16 @@ def entry():
 
   # connect to wifi
   connect_to_wifi(wlan)
-  if True:
+  time.sleep(1)
+#  if True:
+  if False:
     message="checking updates"
     print("{0}".format(message))
     if use_oled:
       oled.fill(0)
       oled.text("{0}".format(message), 0, 10)
       oled.show()
+      time.sleep(2)
     if OTA.update():
       if use_oled:
         message="updated. reboot"
@@ -299,6 +303,7 @@ def entry():
         oled.text("{0}".format(message), 0, 10)
         oled.show()
       print("Updated to the latest version! Rebooting...")
+      time.sleep(2)
       machine.reset()
 
 #  print("WDT : {0}".format(WDT))
